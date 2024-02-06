@@ -1,41 +1,47 @@
 import { useState } from "react";
 import { useEffect } from "react";
 export default function App() {
-  const [isrunning, setRunning] = useState(false);
+  const [isRunning, setIsRunning] = useState(false);
   const [time, setTime] = useState(0);
   const fomatTime = (secs) => {
     const minutes = Math.floor(secs / 60);
-    const seconds = Math.floor(secs % 60);
-    if (seconds < 10) {
-      return `${minutes}:0${seconds}`;
-    }
-    return `${minutes}:${seconds}`;
+    const seconds = secs % 60;
+    return `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`
   };
   const toggleTime = () => {
-    setRunning((prevRunning) => !prevRunning);
+    setIsRunning((prevRunning) => !prevRunning);
   };
 
   const reset = () => {
-    setRunning(false);
+    setIsRunning(false);
     setTime(0);
   };
 
   useEffect(() => {
-    let interval;
-    if (isrunning) {
-      interval = setInterval(() => {
+    
+
+    let intervalId;
+
+    if (isRunning) {
+      intervalId = setInterval(() => {
         setTime((prevTime) => prevTime + 1);
       }, 1000);
+
     } else {
-      clearInterval(interval);
+      clearInterval(intervalId);
     }
-    return () => clearInterval(interval);
-  }, [isrunning]);
+    return () => {clearInterval(intervalId);
+    
+    }
+  }, [isRunning]);
+
+
+
   return (
     <div>
       <h1>Stopwatch</h1>
-      <p>Time : {fomatTime(time)}</p>
-      <button onClick={toggleTime}>{isrunning ? "Stop" : "Start"}</button>
+      <p>Time: {fomatTime(time)}</p>
+      <button onClick={toggleTime}>{isRunning ? "Stop" : "Start"}</button>
       <button onClick={reset}>Reset</button>
     </div>
   );
